@@ -5,32 +5,36 @@ import { successResponse } from "../../utils/response/successResponse.js";
 
 
 
-export const listOfCart = async (req , res , next) => {
-    const {tableNumber} = req.params;
+export const listOfCart = async (req, res, next) => {
+    const { tableNumber } = req.params;
 
-    const userId= req.user?._id;
-    const filter = userId ? {userId} : {tableNumber}
+    if (!req.user) {
+        return res.status(401);
+    };
+    const userId = req.user?._id;
+    const filter = userId ? { userId } : { tableNumber };
+
     const cart = await cartModel.findOne(filter).populate([
-            {
-                path: "menus.menuId",
-                populate:
-                    [
-                        {
-                            path: "categoryId"
-                        }, {
-                            path: "createdBy"
-                        }
-                    ]
-            }
-        ]);
-        if (!cart) {
-            throw new Error("user not have cart");
+        {
+            path: "menus.menuId",
+            populate:
+                [
+                    {
+                        path: "categoryId"
+                    }, {
+                        path: "createdBy"
+                    }
+                ]
         }
+    ]);
+    if (!cart) {
+        throw new Error("user not have cart");
+    }
 
-        return successResponse({
-            res,
-            data: {cart}
-        });
+    return successResponse({
+        res,
+        data: { cart }
+    });
 };
 
 export const createOrUpdateCart = async (req, res, next) => {
