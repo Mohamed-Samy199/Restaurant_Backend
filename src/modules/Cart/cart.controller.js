@@ -14,22 +14,38 @@ export const listOfCart = async (req, res, next) => {
     const userId = req.user?._id;
     const filter = userId ? { userId } : { tableNumber };
 
-    const cart = await cartModel.findOne(filter).populate([
-        {
-            path: "menus.menuId",
-            populate:
-                [
-                    {
-                        path: "categoryId"
-                    }, {
-                        path: "createdBy"
-                    }
+    // const cart = await cartModel.findOne(filter).populate([
+    //     {
+    //         path: "menus.menuId",
+    //         populate:
+    //             [
+    //                 {
+    //                     path: "categoryId"
+    //                 }, {
+    //                     path: "createdBy"
+    //                 }
+    //             ]
+    //     }
+    // ]);
+    // if (!cart) {
+    //     throw new Error("user not have cart");
+    // }
+    const cart = await cartModel
+        .findOne(filter)
+        .populate([
+            {
+                path: "menus.menuId",
+                populate: [
+                    { path: "categoryId" },
+                    { path: "createdBy" }
                 ]
-        }
-    ]);
+            }
+        ])
+        .lean();
+
     if (!cart) {
         throw new Error("user not have cart");
-    }
+    };
 
     return successResponse({
         res,
