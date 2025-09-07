@@ -8,11 +8,11 @@ import { successResponse } from "../../utils/response/successResponse.js";
 export const listOfCart = async (req, res, next) => {
     const { tableNumber } = req.params;
 
-    if (!req.user) {
-        return res.status(401);
-    };
-    const userId = req.user?._id;
-    const filter = userId ? { userId } : { tableNumber };
+    // if (!req.user) {
+    //     return res.status(401);
+    // };
+    // const userId = req.user?._id;
+    // const filter = userId ? { userId } : { tableNumber };
 
     // const cart = await cartModel.findOne(filter).populate([
     //     {
@@ -31,7 +31,7 @@ export const listOfCart = async (req, res, next) => {
     //     throw new Error("user not have cart");
     // }
     const cart = await cartModel
-        .findOne(filter)
+        .findOne(tableNumber)
         .populate([
             {
                 path: "menus.menuId",
