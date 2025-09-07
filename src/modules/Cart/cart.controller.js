@@ -31,7 +31,7 @@ export const listOfCart = async (req, res, next) => {
     //     throw new Error("user not have cart");
     // }
     const cart = await cartModel
-        .findOne(tableNumber)
+        .findOne({tableNumber})
         .populate([
             {
                 path: "menus.menuId",
